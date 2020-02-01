@@ -31,7 +31,6 @@ Pizza.prototype.setPizzaSize = function(size) {
 
 Pizza.prototype.calculatePizzaCost = function() {
   let pizzaCost = 0;
-  alert(this.toppings);
   for(let i = 0; i < this.getToppings().length; i++) {
     pizzaCost += parseFloat(this.getToppings()[i].getToppingPrice());
   }
@@ -147,17 +146,13 @@ function attachPageListeners(pizza) {
     $("#main-content").on("click", "#review-pizza-order-button", function() {
       let toppingsSelected = [];
       toppingsSelected =  Array.from($("div.option-selected"));
-      alert(toppingsSelected.length);
       let toppingsForCustomerPizza = [];
       for(let i = 0; i < toppingsSelected.length; i++) {
         let toppingNameAndPriceArray = [];
         toppingNameAndPriceArray = toppingsSelected[i].id.split(",");
-        alert(toppingNameAndPriceArray[0] + " " + toppingNameAndPriceArray[1]);
         let newTopping = new Topping(toppingNameAndPriceArray[0], toppingNameAndPriceArray[1]);
-        alert(newTopping.getToppingPrice());
         toppingsForCustomerPizza.push(newTopping);
       }
-      alert(toppingsForCustomerPizza.length);
       pizza.toppings = toppingsForCustomerPizza;
       displayPizzaPrice(pizza);
     });
