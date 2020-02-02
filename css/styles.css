@@ -1,3 +1,20 @@
+body {
+    background-color: rgb(15, 15, 15);
+}
+#company-image {
+    float: right;
+}
+#company-image img {
+    width: 100%;
+    height: auto;
+}
+#main-content {
+    height: 100%;
+}
+#home-page img {
+    max-width: 100%;
+    height: auto;
+}
 #pizza-status {
     border: 2px solid green;
 }

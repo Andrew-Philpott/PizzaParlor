@@ -44,6 +44,36 @@ Pizza.prototype.calculatePizzaCost = function() {
   return pizzaCost.toFixed(2);
 }
 
+function createHomePageView() {
+  let main = $("#main-content");
+  let homePageImageHtml = createHomePageImage();
+  let homePageButtonsHtml = createHomePageButtons();
+  let homePageHtml = `<div id='home-page'>${homePageImageHtml}${homePageButtonsHtml}</div>`;
+  return main.html(homePageHtml);
+}
+
+function createHomePageImage() {
+  // let homePage = $("#home-page");
+  let imageSize = "";
+  if(window.matchMedia("(min-width: 632px)").matches) {
+    imageSize = "img/pizzacloseupmedium.jpg";
+  } else if(window.matchMedia("(min-width: 400px)").matches) {
+    imageSize = "img/pizzacloseupsmall.jpg";
+  }
+  let homePageImageHtml = `<div id='home-page-image'><img src='${imageSize}'/></div>`;
+  
+  return homePageImageHtml;
+ // return homePage.html(homePageImageHtml);
+}
+
+function createHomePageButtons() {
+  //let homePage = $("#home-page");
+  let carryOut = `<div id ='carry-out'><button id='carry-out-button'>Carry Out</button></div>`;
+  let delivery = `<div id ='delivery'><button id='delivery-button'>Delivery</button></div>`;
+  let buttons = `${carryOut}${delivery}`;
+  return buttons;
+}
+
 function displayPizzaPrice(pizza) {
   let main = $("#main-content");
   let htmlForPriceofPizza = ""
@@ -55,10 +85,6 @@ function createCustomerPizzaStatusView() {
   let main = $("#main-content");
   let htmlForCustomerPizzaStatus = "<div id='pizza-status'><h2>Your Pizza</h2></div>";
   return main.append(htmlForCustomerPizzaStatus);
-}
-
-function createHomePage() {
-
 }
 
 function updateCustomerPizzaStatusViewWithPizzaSize(size) {
@@ -125,6 +151,51 @@ function createToppingsView(toppings) {
   toppingsHtml += `<button id="review-pizza-order-button">Review Pizza Order</button>`;
   return main.append(toppingsHtml);
 }
+// function removeHomePageView() {
+//   $("#home-page").remove();
+// }
+//#main-content#pizza-size-select.pizza-state
+
+// function pizzaSelectListener() {
+ 
+// }
+
+// function deliveryButtonListener() {
+//   $("#main-content #delivery-button").on("click", function() {
+//     removeHomePageView();
+//     createPizzaSizesView(definePizzaSizes());
+//   });
+// }
+
+function toppingsSelectListener() {
+  $("#toppings-select").on("click", ".toppings", function() {
+    let topping = this.id;
+    let toppingName = topping.split(",")[0];
+    if($(this).hasClass("option-selected")) {
+      $(this).removeClass("option-selected");
+      $(`#${toppingName}`).remove();
+    } else {
+      $(this).addClass("option-selected");
+      updateCustomerPizzaStatusViewWithTopping(toppingName);
+    }
+  });
+}
+
+function reviewPizzaOrderListener(pizza) {
+  $("#main-content").on("click", "#review-pizza-order-button", function() {
+    let toppingsSelected = [];
+    toppingsSelected =  Array.from($("div.option-selected"));
+    let toppingsForCustomerPizza = [];
+    for(let i = 0; i < toppingsSelected.length; i++) {
+      let toppingNameAndPriceArray = [];
+      toppingNameAndPriceArray = toppingsSelected[i].id.split(",");
+      let newTopping = new Topping(toppingNameAndPriceArray[0], toppingNameAndPriceArray[1]);
+      toppingsForCustomerPizza.push(newTopping);
+    }
+    pizza.toppings = toppingsForCustomerPizza;
+    displayPizzaPrice(pizza);
+  });
+}
 
 function attachPageListeners(pizza) {
   $("#pizza-size-select").on("click", ".pizza-size", function() {
@@ -134,37 +205,13 @@ function attachPageListeners(pizza) {
     createCustomerPizzaStatusView();
     updateCustomerPizzaStatusViewWithPizzaSize(pizza.getPizzaSize());
     createToppingsView(defineToppings());
-  
-    $("#toppings-select").on("click", ".toppings", function() {
-      let topping = this.id;
-      let toppingName = topping.split(",")[0];
-      if($(this).hasClass("option-selected")) {
-        $(this).removeClass("option-selected");
-        $(`#${toppingName}`).remove();
-      } else {
-        $(this).addClass("option-selected");
-        updateCustomerPizzaStatusViewWithTopping(toppingName);
-      }
-    });
-
-    $("#main-content").on("click", "#review-pizza-order-button", function() {
-      let toppingsSelected = [];
-      toppingsSelected =  Array.from($("div.option-selected"));
-      let toppingsForCustomerPizza = [];
-      for(let i = 0; i < toppingsSelected.length; i++) {
-        let toppingNameAndPriceArray = [];
-        toppingNameAndPriceArray = toppingsSelected[i].id.split(",");
-        let newTopping = new Topping(toppingNameAndPriceArray[0], toppingNameAndPriceArray[1]);
-        toppingsForCustomerPizza.push(newTopping);
-      }
-      pizza.toppings = toppingsForCustomerPizza;
-      displayPizzaPrice(pizza);
-    });
+    toppingsSelectListener();
+    reviewPizzaOrderListener(pizza);
   });
 }
 
+    
 $(document).ready(function() {
   let pizza = new Pizza();
-  createPizzaSizesView(definePizzaSizes());
-  attachPageListeners(pizza);
+  createHomePageView();
 });
