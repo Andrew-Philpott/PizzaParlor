@@ -57,6 +57,10 @@ function createCustomerPizzaStatusView() {
   return main.append(htmlForCustomerPizzaStatus);
 }
 
+function createHomePage() {
+
+}
+
 function updateCustomerPizzaStatusViewWithPizzaSize(size) {
   let customerPizzaStatusView = $("#pizza-status");
   let htmlForCustomerPizzaStatusUpdate = "";
@@ -95,18 +99,18 @@ function removePizzaSizesView() {
 }
 
 function defineToppings() {
-  let bacon = new Topping("Bacon", 0.50);
-  let chicken = new Topping("Chicken", 0.75);
-  let sausage = new Topping("Sausage", 0.29);
-  let salami = new Topping("Salami", 0.40);
-  let steak = new Topping("Steak", 0.80);
-  let jalapenoPeppers = new Topping("Jalapenos", 0.15);
-  let blackOlives = new Topping("Olives", 0.15);
-  let mushrooms = new Topping("Mushrooms", 0.25);
-  let onions = new Topping("Onions", .10);
-  let pineapple = new Topping("Pineapple", .30);
-  let spinach = new Topping("Spinach", .40);
-  let pepperoni = new Topping("Pepperoni", 2.33);
+  let bacon = new Topping("Bacon", "0.50");
+  let chicken = new Topping("Chicken", "0.75");
+  let sausage = new Topping("Sausage", "0.29");
+  let salami = new Topping("Salami", "0.40");
+  let steak = new Topping("Steak", "0.80");
+  let jalapenoPeppers = new Topping("Jalapenos", "0.15");
+  let blackOlives = new Topping("Olives", "0.15");
+  let mushrooms = new Topping("Mushrooms", "0.25");
+  let onions = new Topping("Onions", "0.10");
+  let pineapple = new Topping("Pineapple", "0.30");
+  let spinach = new Topping("Spinach", "0.40");
+  let pepperoni = new Topping("Pepperoni", "2.33");
   let toppings = [bacon, chicken, sausage, salami, steak, jalapenoPeppers, blackOlives, mushrooms, onions, pineapple, spinach, pepperoni];
   return toppings;
 }
@@ -115,7 +119,7 @@ function createToppingsView(toppings) {
   let main = $("#main-content");
   let toppingsHtml= "<div id='toppings-select'><h2>Select Toppings</h2><ul>";
   toppings.forEach(function(topping) {
-  toppingsHtml += `<div id=${topping.getToppingName()},${topping.getToppingPrice()} class='toppings'><li class='list-group-item' ><p>${topping.getToppingName()}<span class='topping-price'>${topping.getToppingPrice()}</span></p></li></div>`;
+  toppingsHtml += `<div id=${topping.getToppingName()},${topping.getToppingPrice()} class='toppings'><li class='list-group-item' ><p>${topping.getToppingName()}<span class='topping-price'>$ ${topping.getToppingPrice()}</span></p></li></div>`;
   });
   toppingsHtml += "</ul></div>";
   toppingsHtml += `<button id="review-pizza-order-button">Review Pizza Order</button>`;
