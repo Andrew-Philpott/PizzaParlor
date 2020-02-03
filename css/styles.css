@@ -1,5 +1,6 @@
 body {
     background-color: rgb(15, 15, 15);
+    font-size: 22px;
 }
 #company-image {
     float: right;
@@ -17,6 +18,11 @@ body {
 }
 #pizza-status {
     border: 2px solid green;
+    display: flex;
+    flex-wrap: wrap;
+}
+.pizza-option-status {
+    display: flex;
 }
 .option-selected {
     border: 2px solid green;
@@ -29,3 +35,16 @@ ul, li {
     list-style-position: inside;
     padding: 0;
 }
+#order-info {
+    display: flex;
+    flex-wrap: wrap;
+}
+.order-item-spacer {
+    width: 50%;
+}
+/* .order-item-topping-name {
+    width: 50%;
+}
+.order-item-topping-price {
+    width: 50%;
+} */

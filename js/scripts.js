@@ -38,7 +38,7 @@ Pizza.prototype.calculatePizzaCost = function() {
     pizzaCost += 8.99;
   } else if (this.size === "Medium") {
     pizzaCost += 10.99;
-  } else {
+  } else if (this.size === "Large"){
     pizzaCost += 12.99;
   }
   return pizzaCost.toFixed(2);
@@ -122,21 +122,21 @@ function displayPizzaPrice(pizza) {
 
 function createCustomerPizzaStatusView() {
   let main = $("#main-content");
-  let htmlForCustomerPizzaStatus = "<div id='pizza-status'><h2>Your Pizza</h2></div>";
+  let htmlForCustomerPizzaStatus = "<div id='pizza-status-header'><h2>Your Pizza</h2></div><div id='pizza-status'</div>";
   return main.html(htmlForCustomerPizzaStatus);
 }
 
 function updateCustomerPizzaStatusViewWithPizzaSize(size) {
   let customerPizzaStatusView = $("#pizza-status");
   let htmlForCustomerPizzaStatusUpdate = "";
-  htmlForCustomerPizzaStatusUpdate += `<p><span id='selected-pizza-size'>${size}</span><span> > </span></p>`;
+  htmlForCustomerPizzaStatusUpdate += `<div class='pizza-option-status'><p><span id='selected-pizza-size'>${size}</span></p></div>`;
   return customerPizzaStatusView.append(htmlForCustomerPizzaStatusUpdate);
 }
 
 function updateCustomerPizzaStatusViewWithTopping(toppingName) {
   let customerPizzaStatusView = $("#pizza-status");
   let htmlForCustomerPizzaStatus = "";
-  htmlForCustomerPizzaStatus += `<p id=${toppingName}><span>${toppingName}</span></p>`;
+  htmlForCustomerPizzaStatus += `<div class='pizza-option-status'><p  id=${toppingName}><span> > </span><span>${toppingName}</span></p></div>`;
   return customerPizzaStatusView.append(htmlForCustomerPizzaStatus);
 }
 
@@ -184,15 +184,15 @@ function attachToppingsSelectListener() {
 
 function createPizzaOrderHtml(pizzas) {
   let main = $("#main-content");
-  let orderInfo = `<div id='order-info'></div>`;
-  let pizzasHtml = `<div>`;
+  let pizzasHtml = `<div id='order-info'>`;
   pizzas.forEach(function(pizza) {
-    pizzasHtml += `<div><p>${pizza.getPizzaSize()}`;
+    pizzasHtml += `<div class='order-item-spacer'><span>${pizza.getPizzaSize()}</span></div><div class='order-item-spacer'><span>Insert size cost</span></div>`;
     pizza.toppings.forEach(function(topping) {
-      pizzasHtml += `<span> > ${topping.getToppingName()}</span>`;
-    })
+      pizzasHtml += `<div class='order-item-spacer topping-name'><span>${topping.getToppingName()}</span></div><div class='order-item-spacer-spacer topping-price'><span>${topping.getToppingPrice()}</span></div>`;
+    });
+    pizzasHtml += `<div class='order-item-spacer'></div><div class='order-item-spacer'><span>${pizza.calculatePizzaCost()}</span></div>`;
   });
-  pizzasHtml += `</p><button id='add-pizza-button'>Add Pizza</button></div>`;
+  pizzasHtml += `<hr></div><div><button id='add-pizza-button'>Add Pizza</button></div>`;
   return main.html(pizzasHtml);
 }
 
@@ -202,7 +202,7 @@ function createPizzaOrderView(pizzas) {
 }
 
 function attachReviewPizzaOrderListener(pizzas) {
-  $("#main-content").on("click", "#review-pizza-order-button", function() {
+  $("#review-pizza-order-button").on("click", function() {
     let toppingsSelected = [];
     let size = $("#main-content #selected-pizza-size").text();
     toppingsSelected =  Array.from($("div.option-selected"));
@@ -215,6 +215,7 @@ function attachReviewPizzaOrderListener(pizzas) {
     }
     let pizza = new Pizza(toppingsForCustomerPizza, size);
     pizzas.push(pizza);
+    alert(pizzas.length);
     createPizzaOrderView(pizzas);
   });
 }
