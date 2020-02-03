@@ -13,9 +13,9 @@ Topping.prototype.getToppingName = function() {
 }
 
 //Business logic for pizza
-function Pizza(toppings) {
+function Pizza(toppings, size) {
   this.toppings = toppings;
-  this.size = "";
+  this.size = size;
 }
 
 Pizza.prototype.getToppings = function() {
@@ -70,15 +70,15 @@ function createHomePageHtml() {
   return main.html(homePageHtml);
 }
 
-function createHomePageView() {
-  createHomePageHtml();
-  attachDeliveryButtonListener();
+function attachDeliveryButtonListener(pizzas) {
+  $("#delivery-button").on("click", function() {
+    createPizzaSizesView(pizzas);
+  });
 }
 
-function attachDeliveryButtonListener() {
-  $("#delivery-button").on("click", function() {
-    createPizzaSizesView();
-  });
+function createHomePageView(pizzas) {
+  createHomePageHtml();
+  attachDeliveryButtonListener(pizzas);
 }
 
 function definePizzaSizes() {
@@ -100,18 +100,18 @@ function createPizzaSizesHtml(pizzaSizes) {
   return main.html(pizzaSizesHtml);
 }
 
-function attachPizzaSizeSelectListener() {
+function attachPizzaSizeSelectListener(pizzas) {
   $("#pizza-size-select").on("click", ".pizza-size", function() {
     let pizzaSize = this.id;
     createCustomerPizzaStatusView();
     updateCustomerPizzaStatusViewWithPizzaSize(pizzaSize);
-    createToppingsView(defineToppings());
+    createToppingsView(pizzas);
   });
 }
 
-function createPizzaSizesView(pizzaSizes) {
+function createPizzaSizesView(pizzas) {
   createPizzaSizesHtml(definePizzaSizes());
-  attachPizzaSizeSelectListener();
+  attachPizzaSizeSelectListener(pizzas);
 }
 function displayPizzaPrice(pizza) {
   let main = $("#main-content");
@@ -129,7 +129,7 @@ function createCustomerPizzaStatusView() {
 function updateCustomerPizzaStatusViewWithPizzaSize(size) {
   let customerPizzaStatusView = $("#pizza-status");
   let htmlForCustomerPizzaStatusUpdate = "";
-  htmlForCustomerPizzaStatusUpdate += `<p><span>${size} > </span></p>`;
+  htmlForCustomerPizzaStatusUpdate += `<p><span id='selected-pizza-size'>${size}</span><span> > </span></p>`;
   return customerPizzaStatusView.append(htmlForCustomerPizzaStatusUpdate);
 }
 
@@ -182,9 +182,29 @@ function attachToppingsSelectListener() {
   });
 }
 
-function attachReviewPizzaOrderListener(pizza) {
+function createPizzaOrderHtml(pizzas) {
+  let main = $("#main-content");
+  let orderInfo = `<div id='order-info'></div>`;
+  let pizzasHtml = `<div>`;
+  pizzas.forEach(function(pizza) {
+    pizzasHtml += `<div><p>${pizza.getPizzaSize()}`;
+    pizza.toppings.forEach(function(topping) {
+      pizzasHtml += `<span> > ${topping.getToppingName()}</span>`;
+    })
+  });
+  pizzasHtml += `</p><button id='add-pizza-button'>Add Pizza</button></div>`;
+  return main.html(pizzasHtml);
+}
+
+function createPizzaOrderView(pizzas) {
+  createPizzaOrderHtml(pizzas);
+  attachAddPizzaToOrderListener(pizzas);
+}
+
+function attachReviewPizzaOrderListener(pizzas) {
   $("#main-content").on("click", "#review-pizza-order-button", function() {
     let toppingsSelected = [];
+    let size = $("#main-content #selected-pizza-size").text();
     toppingsSelected =  Array.from($("div.option-selected"));
     let toppingsForCustomerPizza = [];
     for(let i = 0; i < toppingsSelected.length; i++) {
@@ -193,23 +213,33 @@ function attachReviewPizzaOrderListener(pizza) {
       let newTopping = new Topping(toppingNameAndPriceArray[0], toppingNameAndPriceArray[1]);
       toppingsForCustomerPizza.push(newTopping);
     }
-    pizza.toppings = toppingsForCustomerPizza;
-    displayPizzaPrice(pizza);
+    let pizza = new Pizza(toppingsForCustomerPizza, size);
+    pizzas.push(pizza);
+    createPizzaOrderView(pizzas);
   });
 }
 
-function createToppingsView(toppings) {
-  createToppingsHtml(toppings);
+function attachAddPizzaToOrderListener(pizzas) {
+  $("#add-pizza-button").on("click", function() {
+    addNewPizza(pizzas);
+  })
+}
+
+function createToppingsView(pizzas) {
+  createToppingsHtml(defineToppings());
   attachToppingsSelectListener();
-  attachReviewPizzaOrderListener();
+  attachReviewPizzaOrderListener(pizzas);
+}
+
+function addNewPizza(pizzas) {
+  createPizzaSizesView(pizzas);
 }
 
 function go() {
-  createHomePageView();
-  attachDeliveryButtonListener();
+  let pizzas = [];
+  createHomePageView(pizzas);
 }
     
 $(document).ready(function() {
-  let pizza = new Pizza();
   go();
 });
