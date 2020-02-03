@@ -215,7 +215,6 @@ function attachReviewPizzaOrderListener(pizzas) {
     }
     let pizza = new Pizza(toppingsForCustomerPizza, size);
     pizzas.push(pizza);
-    alert(pizzas.length);
     createPizzaOrderView(pizzas);
   });
 }
