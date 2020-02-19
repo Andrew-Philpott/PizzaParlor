@@ -76,8 +76,8 @@ function createHomePageImageHtml() {
 }
 
 function createHomePageButtonsHtml() {
-  let delivery = `<div id ='delivery'><button id='delivery-button' class='btn btn-primary'>Delivery</button></div>`;
-  let buttons = `${delivery}`;
+  let carryOut = `<div id ='carryOut'><button id='carryout-button' class='btn btn-primary'>Carry Out</button></div>`;
+  let buttons = `${carryOut}`;
   return buttons;
 }
 
@@ -89,8 +89,8 @@ function createHomePageHtml() {
   return main.html(homePageHtml);
 }
 
-function attachDeliveryButtonListener(pizzas) {
-  $("#delivery-button").on("click", function() {
+function attachCarryOutButtonListener(pizzas) {
+  $("#carryout-button").on("click", function() {
     createPizzaCrustTypesView(pizzas);
   });
 }
