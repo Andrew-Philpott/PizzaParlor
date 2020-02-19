@@ -97,7 +97,7 @@ function attachCarryOutButtonListener(pizzas) {
 
 function createHomePageView(pizzas) {
   createHomePageHtml();
-  attachDeliveryButtonListener(pizzas);
+  attachCarryOutButtonListener(pizzas);
 }
 
 function definePizzaCrustSizes() {
@@ -109,7 +109,6 @@ function definePizzaCrustSizes() {
 }
 
 function definePizzaCrustTypes() {
-  ///hand tossed, handmade pan, crunchy thin, brooklyn style
   let crustTypes = [];
   crustTypes.push("Hand Tossed", "Handmade Pan", "Crunchy Thin", "Brooklyn Style");
   return crustTypes;
@@ -119,7 +118,7 @@ function createPizzaCrustTypesHtml(crustTypes) {
   let main = $("#main-content");
   let pizzaCrustTypesHtml = `<div id='pizza-crust-type-select'><h2>Select Pizza type<h2><ul>`;
   for(let i = 0; i < crustTypes.length; i++) {
-    pizzaCrustTypesHtml += `<div id=${crustTypes[i]} class='pizza-crust-type'><li class='list-group-item'><p>${crustTypes[i]}</p></li></div>`;
+    pizzaCrustTypesHtml += `<div class='pizza-crust-type'><li class='list-group-item'><p>${crustTypes[i]}</p></li></div>`;
   }
   pizzaCrustTypesHtml += '</ul></div>';
   return main.html(pizzaCrustTypesHtml);
@@ -147,7 +146,7 @@ function attachPizzaSizeSelectListener(pizzas, pizzaCrust) {
 
 function attachPizzaCrustTypeSelectListener(pizzas) {
   $("#pizza-crust-type-select").on("click", ".pizza-crust-type", function() {
-    let pizzaCrust = this.id;
+    let pizzaCrust = $(this).text();
     createPizzaSizesView(pizzas, pizzaCrust);
   })
 }
@@ -177,7 +176,7 @@ function createCustomerPizzaStatusView() {
 function updateCustomerPizzaStatusViewWithPizzaSize(size, pizzaCrustType) {
   const customerPizzaStatusView = $("#pizza-status");
   let htmlForCustomerPizzaStatusUpdate = "";
-  htmlForCustomerPizzaStatusUpdate += `<div class='pizza-option-status'><p><span id='selected-pizza-crust-size'>${size}</span><span id='selected-pizza-crust-type'>${pizzaCrustType}</span> > </p></div>`;
+  htmlForCustomerPizzaStatusUpdate += `<div class='pizza-option-status'><p><span id='selected-pizza-crust-size'>${size}</span><span>> </span></span><span id='selected-pizza-crust-type'>${pizzaCrustType}</span></p></div>`;
   return customerPizzaStatusView.append(htmlForCustomerPizzaStatusUpdate);
 }
 
