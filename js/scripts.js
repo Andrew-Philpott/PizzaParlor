@@ -1,3 +1,29 @@
+//Business logic for Crust
+function Crust(size, type) {
+  this.size = size;
+  this.type = type;
+  this.price;
+  if(this.size === "Small") {
+    this.price = "7.99";
+  } else if (this.size === "Medium") {
+    this.price = "9.99";
+  } else if (this.size === "Large") {
+    this.price = "11.99";
+  }
+}
+
+Crust.prototype.getSize = function() {
+  return this.size;
+}
+
+Crust.prototype.getType = function() {
+  return this.type;
+}
+
+Crust.prototype.getPrice = function() {
+  return this.price;
+}
+
 //Business logic for topping
 function Topping(name, price) {
   this.name = name;
@@ -13,20 +39,20 @@ Topping.prototype.getToppingName = function() {
 }
 
 //Business logic for pizza
-function Pizza(toppings, size) {
+function Pizza(toppings, crust) {
   this.toppings = toppings;
-  this.size = size;
+  this.crust = crust;
 }
 
 Pizza.prototype.getToppings = function() {
   return this.toppings;
 }
 
-Pizza.prototype.getPizzaSize = function() {
-  return this.size;
+Pizza.prototype.getPizzaCrust = function() {
+  return this.crust;
 }
-Pizza.prototype.setPizzaSize = function(size) {
-  this.size = size;
+Pizza.prototype.setPizzaCrust = function(crust) {
+  this.crust = crust;
 }
 
 Pizza.prototype.calculatePizzaCost = function() {
@@ -34,13 +60,7 @@ Pizza.prototype.calculatePizzaCost = function() {
   for(let i = 0; i < this.getToppings().length; i++) {
     pizzaCost += parseFloat(this.getToppings()[i].getToppingPrice());
   }
-  if(this.size === "Small") {
-    pizzaCost += 8.99;
-  } else if (this.size === "Medium") {
-    pizzaCost += 10.99;
-  } else if (this.size === "Large"){
-    pizzaCost += 12.99;
-  }
+  pizzaCost += parseFloat((this.getPizzaCrust().getPrice()));
   return pizzaCost.toFixed(2);
 }
 
@@ -56,9 +76,8 @@ function createHomePageImageHtml() {
 }
 
 function createHomePageButtonsHtml() {
-  let carryOut = `<div id ='carry-out'><button id='carry-out-button'>Carry Out</button></div>`;
-  let delivery = `<div id ='delivery'><button id='delivery-button'>Delivery</button></div>`;
-  let buttons = `${carryOut}${delivery}`;
+  let delivery = `<div id ='delivery'><button id='delivery-button' class='btn btn-primary'>Delivery</button></div>`;
+  let buttons = `${delivery}`;
   return buttons;
 }
 
@@ -72,7 +91,7 @@ function createHomePageHtml() {
 
 function attachDeliveryButtonListener(pizzas) {
   $("#delivery-button").on("click", function() {
-    createPizzaSizesView(pizzas);
+    createPizzaCrustTypesView(pizzas);
   });
 }
 
@@ -81,12 +100,29 @@ function createHomePageView(pizzas) {
   attachDeliveryButtonListener(pizzas);
 }
 
-function definePizzaSizes() {
+function definePizzaCrustSizes() {
   let pizzaSizes = [];
   pizzaSizes.push(['Small (10")', 'Small']);
   pizzaSizes.push(['Medium (12")', 'Medium']);
   pizzaSizes.push(['Large (14")', 'Large']);
   return pizzaSizes;
+}
+
+function definePizzaCrustTypes() {
+  ///hand tossed, handmade pan, crunchy thin, brooklyn style
+  let crustTypes = [];
+  crustTypes.push("Hand Tossed", "Handmade Pan", "Crunchy Thin", "Brooklyn Style");
+  return crustTypes;
+}
+
+function createPizzaCrustTypesHtml(crustTypes) {
+  let main = $("#main-content");
+  let pizzaCrustTypesHtml = `<div id='pizza-crust-type-select'><h2>Select Pizza type<h2><ul>`;
+  for(let i = 0; i < crustTypes.length; i++) {
+    pizzaCrustTypesHtml += `<div id=${crustTypes[i]} class='pizza-crust-type'><li class='list-group-item'><p>${crustTypes[i]}</p></li></div>`;
+  }
+  pizzaCrustTypesHtml += '</ul></div>';
+  return main.html(pizzaCrustTypesHtml);
 }
 
 function createPizzaSizesHtml(pizzaSizes) {
@@ -100,18 +136,30 @@ function createPizzaSizesHtml(pizzaSizes) {
   return main.html(pizzaSizesHtml);
 }
 
-function attachPizzaSizeSelectListener(pizzas) {
+function attachPizzaSizeSelectListener(pizzas, pizzaCrust) {
   $("#pizza-size-select").on("click", ".pizza-size", function() {
     let pizzaSize = this.id;
     createCustomerPizzaStatusView();
-    updateCustomerPizzaStatusViewWithPizzaSize(pizzaSize);
+    updateCustomerPizzaStatusViewWithPizzaSize(pizzaSize, pizzaCrust);
     createToppingsView(pizzas);
   });
 }
 
-function createPizzaSizesView(pizzas) {
-  createPizzaSizesHtml(definePizzaSizes());
-  attachPizzaSizeSelectListener(pizzas);
+function attachPizzaCrustTypeSelectListener(pizzas) {
+  $("#pizza-crust-type-select").on("click", ".pizza-crust-type", function() {
+    let pizzaCrust = this.id;
+    createPizzaSizesView(pizzas, pizzaCrust);
+  })
+}
+
+function createPizzaSizesView(pizzas, pizzaCrust) {
+  createPizzaSizesHtml(definePizzaCrustSizes());
+  attachPizzaSizeSelectListener(pizzas, pizzaCrust);
+}
+
+function createPizzaCrustTypesView(pizzas) {
+  createPizzaCrustTypesHtml(definePizzaCrustTypes());
+  attachPizzaCrustTypeSelectListener(pizzas);
 }
 function displayPizzaPrice(pizza) {
   let main = $("#main-content");
@@ -126,34 +174,34 @@ function createCustomerPizzaStatusView() {
   return main.html(htmlForCustomerPizzaStatus);
 }
 
-function updateCustomerPizzaStatusViewWithPizzaSize(size) {
-  let customerPizzaStatusView = $("#pizza-status");
+function updateCustomerPizzaStatusViewWithPizzaSize(size, pizzaCrustType) {
+  const customerPizzaStatusView = $("#pizza-status");
   let htmlForCustomerPizzaStatusUpdate = "";
-  htmlForCustomerPizzaStatusUpdate += `<div class='pizza-option-status'><p><span id='selected-pizza-size'>${size}</span></p></div>`;
+  htmlForCustomerPizzaStatusUpdate += `<div class='pizza-option-status'><p><span id='selected-pizza-crust-size'>${size}</span><span id='selected-pizza-crust-type'>${pizzaCrustType}</span> > </p></div>`;
   return customerPizzaStatusView.append(htmlForCustomerPizzaStatusUpdate);
 }
 
 function updateCustomerPizzaStatusViewWithTopping(toppingName) {
-  let customerPizzaStatusView = $("#pizza-status");
+  const customerPizzaStatusView = $("#pizza-status");
   let htmlForCustomerPizzaStatus = "";
-  htmlForCustomerPizzaStatus += `<div class='pizza-option-status'><p  id=${toppingName}><span> > </span><span>${toppingName}</span></p></div>`;
+  htmlForCustomerPizzaStatus += `<div class='pizza-option-status'><p id=${toppingName}><span> > </span><span>${toppingName}</span></p></div>`;
   return customerPizzaStatusView.append(htmlForCustomerPizzaStatus);
 }
 
 function defineToppings() {
-  let bacon = new Topping("Bacon", "0.50");
-  let chicken = new Topping("Chicken", "0.75");
-  let sausage = new Topping("Sausage", "0.29");
-  let salami = new Topping("Salami", "0.40");
-  let steak = new Topping("Steak", "0.80");
-  let jalapenoPeppers = new Topping("Jalapenos", "0.15");
-  let blackOlives = new Topping("Olives", "0.15");
-  let mushrooms = new Topping("Mushrooms", "0.25");
-  let onions = new Topping("Onions", "0.10");
-  let pineapple = new Topping("Pineapple", "0.30");
-  let spinach = new Topping("Spinach", "0.40");
-  let pepperoni = new Topping("Pepperoni", "2.33");
-  let toppings = [bacon, chicken, sausage, salami, steak, jalapenoPeppers, blackOlives, mushrooms, onions, pineapple, spinach, pepperoni];
+  const bacon = new Topping("Bacon", "0.50");
+  const chicken = new Topping("Chicken", "0.75");
+  const sausage = new Topping("Sausage", "0.29");
+  const salami = new Topping("Salami", "0.40");
+  const steak = new Topping("Steak", "0.80");
+  const jalapenoPeppers = new Topping("Jalapenos", "0.15");
+  const blackOlives = new Topping("Olives", "0.15");
+  const mushrooms = new Topping("Mushrooms", "0.25");
+  const onions = new Topping("Onions", "0.10");
+  const pineapple = new Topping("Pineapple", "0.30");
+  const spinach = new Topping("Spinach", "0.40");
+  const pepperoni = new Topping("Pepperoni", "2.33");
+  const toppings = [bacon, chicken, sausage, salami, steak, jalapenoPeppers, blackOlives, mushrooms, onions, pineapple, spinach, pepperoni];
   return toppings;
 }
 
@@ -186,7 +234,7 @@ function createPizzaOrderHtml(pizzas) {
   let main = $("#main-content");
   let pizzasHtml = `<div id='order-info'>`;
   pizzas.forEach(function(pizza) {
-    pizzasHtml += `<div class='order-item-spacer'><span>${pizza.getPizzaSize()}</span></div><div class='order-item-spacer'><span>Insert size cost</span></div>`;
+    pizzasHtml += `<div class='order-item-spacer'><span>${pizza.getPizzaCrust().getSize()} ${pizza.getPizzaCrust().getType()}</span></div><div class='order-item-spacer'><span>${pizza.getPizzaCrust().getPrice()}</span></div>`;
     pizza.toppings.forEach(function(topping) {
       pizzasHtml += `<div class='order-item-spacer topping-name'><span>${topping.getToppingName()}</span></div><div class='order-item-spacer-spacer topping-price'><span>${topping.getToppingPrice()}</span></div>`;
     });
@@ -194,7 +242,7 @@ function createPizzaOrderHtml(pizzas) {
   });
   pizzasHtml += `<hr></div><div><button id='add-pizza-button'>Add Pizza</button></div>`;
   return main.html(pizzasHtml);
-}
+};
 
 function createPizzaOrderView(pizzas) {
   createPizzaOrderHtml(pizzas);
@@ -204,7 +252,8 @@ function createPizzaOrderView(pizzas) {
 function attachReviewPizzaOrderListener(pizzas) {
   $("#review-pizza-order-button").on("click", function() {
     let toppingsSelected = [];
-    let size = $("#main-content #selected-pizza-size").text();
+    let size = $("#main-content #selected-pizza-crust-size").text();
+    let type = $("#main-content #selected-pizza-crust-type").text();
     toppingsSelected =  Array.from($("div.option-selected"));
     let toppingsForCustomerPizza = [];
     for(let i = 0; i < toppingsSelected.length; i++) {
@@ -213,7 +262,8 @@ function attachReviewPizzaOrderListener(pizzas) {
       let newTopping = new Topping(toppingNameAndPriceArray[0], toppingNameAndPriceArray[1]);
       toppingsForCustomerPizza.push(newTopping);
     }
-    let pizza = new Pizza(toppingsForCustomerPizza, size);
+    let crust = new Crust(size, type);
+    let pizza = new Pizza(toppingsForCustomerPizza, crust);
     pizzas.push(pizza);
     createPizzaOrderView(pizzas);
   });
@@ -232,7 +282,8 @@ function createToppingsView(pizzas) {
 }
 
 function addNewPizza(pizzas) {
-  createPizzaSizesView(pizzas);
+  createPizzaCrustTypesView(pizzas);
+ // createPizzaSizesView(pizzas);
 }
 
 function go() {
