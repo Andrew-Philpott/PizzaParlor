@@ -1,36 +1,47 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
-    <link rel="stylesheet" href="css/styles.css">
-    <script src="https://code.jquery.com/jquery-3.4.1.js" integrity="sha256-WpOohJOqMqqyKL9FccASB9O0KwACQJpFTUBLTYOVvVU=" crossorigin="anonymous"></script>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link
+      rel="stylesheet"
+      href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+      integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T"
+      crossorigin="anonymous"
+    />
+    <link rel="stylesheet" href="css/styles.css" />
+    <script
+      src="https://code.jquery.com/jquery-3.4.1.js"
+      integrity="sha256-WpOohJOqMqqyKL9FccASB9O0KwACQJpFTUBLTYOVvVU="
+      crossorigin="anonymous"
+    ></script>
     <script src="js/scripts.js"></script>
     <title>Pizza Parlor</title>
-</head>
-<body>
-  <div class="container">
-    <div id="header">
-      <div class="row">
-        <div class="col-9">
-          <h1>Scorpion King Pizza</h1>
-          <p class="lead">Great pizza takes no shortcuts.</p>
-        </div>
-        <div class="col-3">
-          <div id="company-image">
-            <img src="img/scorpion.png">
+  </head>
+  <body>
+    <div class="container">
+      <div id="header">
+        <div class="row">
+          <div id='company-info' class="col-9">
+            <h1 id="header-name">
+              <span>Scorpion</span>&nbsp;<span>King</span>&nbsp;<span>Pizza<span>
+            </h1>
+            <p>Great pizza takes no shortcuts.</p>
+          </div>
+          <div id='image-container' class="col-3">
+            <div id="company-image">
+              <img src="img/scorpion.png" />
+            </div>
           </div>
         </div>
-      </div>   
-    </div>
-    <div id="main-content">
-      <div class="row">
-        <div class="col-12">
-          <button id="review-pizza-order-button"></button>   
+      </div>
+      <div id="main-content">
+        <div class="row">
+          <div class="col-12">
+            <button id="review-pizza-order-button"></button>
+          </div>
         </div>
       </div>
     </div>
-  </div>
-</body>
+  </body>
 </html>
