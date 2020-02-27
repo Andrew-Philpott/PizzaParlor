@@ -64,22 +64,42 @@ Pizza.prototype.calculatePizzaCost = function() {
   return pizzaCost.toFixed(2);
 }
 
+
 function createHomePageImageHtml() {
-  let imageSize = "";
-  if(window.matchMedia("(min-width: 632px)").matches) {
-    imageSize = "img/pizzacloseupmedium.jpg";
-  } else if(window.matchMedia("(min-width: 400px)").matches) {
-    imageSize = "img/pizzacloseupsmall.jpg";
-  }
-  let homePageImageHtml = `<div id='home-page-image'><img src='${imageSize}'/></div>`;
+  let imageSize = `<picture>
+  <source srcset="img/pizzasmall.jpg"
+  media="(max-width: 575.98px)">  
+  <source srcset="img/pizzamedium.jpg"
+          media="(max-width: 767.98px)">   
+  <img src="img/pizzamedium.jpg" />
+</picture>`;
+
+
+
+  // if(window.matchMedia("(min-width: 1900px)").matches) {
+  //   imageSize = "img/pizzalarge.jpg";
+  // } else if(window.matchMedia("(min-width: 630px)").matches && window.matchMedia("(max-width: 1200px)").matches) {
+  //   imageSize = "img/pizzamedium.jpg";
+  // } else if(window.matchMedia("(min-width: 400px)").matches && (window.matchMedia("(max-width: 631px)").matches)) {
+  //   imageSize = "img/pizzasmall.jpg";
+  // }
+  let homePageImageHtml = `<div id='home-page-image'>${imageSize}</div>`;
   return homePageImageHtml;
 }
 
 function createHomePageButtonsHtml() {
-  let carryOut = `<div id ='carryOut'><button id='carryout-button' class='btn btn-primary'>Carry Out</button></div>`;
+  let carryOut = `<div id ='home-buttons'><button id='carryout-button' class='button-theme'>Carry Out</button></div>`;
   let buttons = `${carryOut}`;
   return buttons;
 }
+
+// function resize() {
+//   let homePageImage = $("#home-page-image");
+//   if(homePageImage) {
+//     $("#home-page-image").remove();
+//     createHomePageImageHtml();
+//   }
+// }
 
 function createHomePageHtml() {
   let main = $("#main-content");
@@ -116,9 +136,9 @@ function definePizzaCrustTypes() {
 
 function createPizzaCrustTypesHtml(crustTypes) {
   let main = $("#main-content");
-  let pizzaCrustTypesHtml = `<div id='pizza-crust-type-select'><h2>Select Pizza type<h2><ul>`;
+  let pizzaCrustTypesHtml = `<div id='pizza-crust-type-select'><h2>Select Pizza type</h2><ul>`;
   for(let i = 0; i < crustTypes.length; i++) {
-    pizzaCrustTypesHtml += `<div class='pizza-crust-type'><li class='list-group-item'><p>${crustTypes[i]}</p></li></div>`;
+    pizzaCrustTypesHtml += `<div class='pizza-crust-type option-container'><li class='list-group-item'><p class='option-text'>${crustTypes[i]}</p></li></div>`;
   }
   pizzaCrustTypesHtml += '</ul></div>';
   return main.html(pizzaCrustTypesHtml);
@@ -128,7 +148,7 @@ function createPizzaSizesHtml(pizzaSizes) {
   let main = $("#main-content");
   let pizzaSizesHtml = "<div id='pizza-size-select'><h2>Select Pizza size</h2><ul>";
   for(let i = 0; i < pizzaSizes.length; i++) {
-  pizzaSizesHtml += `<div id=${pizzaSizes[i][1]} class='pizza-size'><li class='list-group-item'><p>${pizzaSizes[i][0]}</p></li></div>`;
+  pizzaSizesHtml += `<div id=${pizzaSizes[i][1]} class='pizza-size option-container'><li class='list-group-item'><p class='option-text'>${pizzaSizes[i][0]}</p></li></div>`;
   }
   pizzaSizesHtml += '</ul></div>';
 
@@ -208,7 +228,7 @@ function createToppingsHtml(toppings) {
   let main = $("#main-content");
   let toppingsHtml= "<div id='toppings-select'><h2>Select Toppings</h2><ul>";
   toppings.forEach(function(topping) {
-  toppingsHtml += `<div id=${topping.getToppingName()},${topping.getToppingPrice()} class='toppings'><li class='list-group-item' ><p>${topping.getToppingName()}<span class='topping-price'>$ ${topping.getToppingPrice()}</span></p></li></div>`;
+  toppingsHtml += `<div id=${topping.getToppingName()},${topping.getToppingPrice()} class='toppings option-container'><li class='list-group-item' ><p class='option-text'>${topping.getToppingName()}<span class='topping-price'>$ ${topping.getToppingPrice()}</span></p></li></div>`;
   });
   toppingsHtml += "</ul></div>";
   toppingsHtml += `<button id="review-pizza-order-button">Review Pizza Order</button>`;
