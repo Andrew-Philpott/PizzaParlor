@@ -8,8 +8,7 @@ _The purpose of this application is to provide users the ability to build their 
 * _Spec: The user should be able to select a pizza size and save it to their pizza._
   * Input: User selects small.
   * Output: Pizza size is small.
-
-## Specs
+  
 * _Spec: The toppings menu should display when the user selects a pizza._
   * Input: The user selects a small pizza.
   * Output: The screen shows a list of toppings.
